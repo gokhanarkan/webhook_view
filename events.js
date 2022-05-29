@@ -5,7 +5,7 @@ let requests = [];
 
 export const createId = (_, res) => {
   const id = customAlphabet("1234567890abcxyz", 10)();
-  clients[id] = {};
+  clients[id] = { connected: false };
   res.status(201).json({ id });
 };
 
@@ -15,8 +15,10 @@ export const getRequests = (req, res) => {
   if (!clients[client])
     return res.status(400).json({ error: "user not found" });
 
+  if (clients[client].connected) return saveRequest(req, res);
+
   clients[client].response = res;
-  clients[client].closed = false;
+  clients[client].connected = true;
 
   // Create headers
   res.writeHead(200, {
@@ -31,7 +33,7 @@ export const getRequests = (req, res) => {
 
   req.on("close", () => {
     console.log(`${client} Connection closed`);
-    clients[client].closed = true;
+    clients[client].connected = false;
   });
 };
 

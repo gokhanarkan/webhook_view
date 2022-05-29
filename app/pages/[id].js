@@ -41,28 +41,27 @@ export default function Event() {
   return (
     <Container maxW="4xl">
       <Accordion allowMultiple>
-        {requests.length ? (
-          requests.map((r, i) => (
-            <AccordionItem key={i}>
-              <h2>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    {r.request.method} request on{" "}
-                    <b>{new Date(r.createdAt).toGMTString()}</b>
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel pb={4}>
-                <ReactJson src={r.request} displayDataTypes={false} />
-              </AccordionPanel>
-            </AccordionItem>
-          ))
-        ) : (
-          <Text textAlign="center" mt={8}>
-            Simply, use the link on the address bar. No need to refresh.
-          </Text>
-        )}
+        {requests.length
+          ? requests.map((r, i) => (
+              <AccordionItem key={i}>
+                <h2>
+                  <AccordionButton>
+                    <Box flex="1" textAlign="left">
+                      {r.request.method} request on{" "}
+                      <b>{new Date(r.createdAt).toGMTString()}</b>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <ReactJson src={r.request} displayDataTypes={false} />
+                </AccordionPanel>
+              </AccordionItem>
+            ))
+          : null}
+        <Text textAlign="center" mt={4}>
+          Simply, use the link on the address bar. No need to refresh.
+        </Text>
       </Accordion>
     </Container>
   );

@@ -36,8 +36,8 @@ export default function Home() {
               incoming request and payload?
             </Text>
             <Text>
-              I know this may be oddly specific, but from time to time I needed
-              it seems.
+              I know this may be oddly specific, but it seems from time to time
+              I needed this.
             </Text>
             <Text>
               Simply click the button below and use the URL in the address bar

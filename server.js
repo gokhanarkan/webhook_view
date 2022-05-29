@@ -1,7 +1,6 @@
 import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
-import helmet from "helmet";
 import xss from "xss-clean";
 import hpp from "hpp";
 import cors from "cors";
@@ -13,7 +12,6 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(helmet());
 app.use(xss());
 app.use(hpp());
 app.use(cors());
