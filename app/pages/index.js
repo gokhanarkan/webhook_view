@@ -1,6 +1,13 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Button, Box, Container, Heading, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Container,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 export default function Home() {
   const router = useRouter();
@@ -20,26 +27,28 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container maxW="4xl" mt={4} mx="auto">
-        <Heading mb={2}>Hello!</Heading>
-        <Box my={2}>
-          <Text>
-            Ever needed a temporary endpoint where you need to see the incoming
-            request and payload?
-          </Text>
-          <Text>
-            I know this may be oddly specific, but from time to time I needed it
-            seems.
-          </Text>
-          <Text>
-            Simply click the button below and use the URL in the address bar to
-            see what is coming.
-          </Text>
-          <Text>No need to refresh!</Text>
-        </Box>
-        <Button colorScheme="blue" mt={2} onClick={getId}>
-          Get ID
-        </Button>
+      <Container maxW="4xl" mt={20} mx="auto">
+        <VStack>
+          <Heading mb={2}>Hello!</Heading>
+          <Box my={2}>
+            <Text>
+              Ever needed a temporary endpoint where you need to see the
+              incoming request and payload?
+            </Text>
+            <Text>
+              I know this may be oddly specific, but from time to time I needed
+              it seems.
+            </Text>
+            <Text>
+              Simply click the button below and use the URL in the address bar
+              to see what is coming.
+            </Text>
+            <Text>No need to refresh!</Text>
+          </Box>
+          <Button colorScheme="blue" onClick={getId}>
+            Get ID
+          </Button>
+        </VStack>
       </Container>
     </div>
   );
