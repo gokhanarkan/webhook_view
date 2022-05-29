@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
@@ -8,7 +7,10 @@ import {
   AccordionPanel,
   AccordionIcon,
   Box,
+  Container,
+  Text,
 } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
 const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
 
 export default function Event() {
@@ -22,12 +24,14 @@ export default function Event() {
 
     if (!listening) {
       const events = new EventSource(
-        `http://localhost:3001/${router.query.id}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/${router.query.id}`
       );
 
       events.onmessage = (event) => {
-        const parsedData = JSON.parse(event.data);
-        setRequests((requests) => requests.concat(parsedData));
+        const data = JSON.parse(event.data).sort(
+          (x, y) => y.createdAt - x.createdAt
+        );
+        setRequests(data);
       };
 
       setListening(true);
@@ -35,24 +39,31 @@ export default function Event() {
   }, [router.isReady, listening, requests]);
 
   return (
-    <main>
+    <Container maxW="4xl">
       <Accordion allowMultiple>
-        {requests.map((r, i) => (
-          <AccordionItem key={i}>
-            <h2>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  {r.request.method} request on {r.createdAt}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <ReactJson src={r.request} displayDataTypes={false} />
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
+        {requests.length ? (
+          requests.map((r, i) => (
+            <AccordionItem key={i}>
+              <h2>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    {r.request.method} request on{" "}
+                    <b>{new Date(r.createdAt).toGMTString()}</b>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <ReactJson src={r.request} displayDataTypes={false} />
+              </AccordionPanel>
+            </AccordionItem>
+          ))
+        ) : (
+          <Text textAlign="center" mt={8}>
+            Simply, use the link on the address bar. No need to refresh.
+          </Text>
+        )}
       </Accordion>
-    </main>
+    </Container>
   );
 }

@@ -16,6 +16,7 @@ export const getRequests = (req, res) => {
     return res.status(400).json({ error: "user not found" });
 
   clients[client].response = res;
+  clients[client].closed = false;
 
   // Create headers
   res.writeHead(200, {
@@ -30,8 +31,7 @@ export const getRequests = (req, res) => {
 
   req.on("close", () => {
     console.log(`${client} Connection closed`);
-    // TODO: Delete client and their requests
-    // clients = clients.filter((c) => c !== client);
+    clients[client].closed = true;
   });
 };
 

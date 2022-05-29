@@ -1,5 +1,5 @@
+import path from "path";
 import express from "express";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import xss from "xss-clean";
@@ -17,20 +17,17 @@ app.use(helmet());
 app.use(xss());
 app.use(hpp());
 app.use(cors());
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
 
 // Routes
-app.get("/", createId);
+app.get("/", (_, res) => {
+ res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/create", createId);
 app
   .get("/:id", getRequests)
   .post("/:id", saveRequest)
   .put("/:id", saveRequest)
   .delete("/:id", saveRequest);
 
-const PORT = process.env.PORT || 3001;
-app.listen(
-  PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+const PORT = process.env.PORT || 1111;
+app.listen(PORT, console.log(`Server running on port ${PORT}`));
