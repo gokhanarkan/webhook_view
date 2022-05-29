@@ -1,4 +1,3 @@
-import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -19,9 +18,6 @@ app.use(hpp());
 app.use(cors());
 
 // Routes
-app.get("/", (_, res) => {
- res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 app.get("/create", createId);
 app
   .get("/:id", getRequests)
