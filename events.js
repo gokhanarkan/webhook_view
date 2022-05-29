@@ -1,19 +1,21 @@
 import { customAlphabet } from "nanoid";
 
-let clients = [];
+let clients = {};
 let requests = [];
 
-export const createId = (req, res) => {
+export const createId = (_, res) => {
   const id = customAlphabet("1234567890abcxyz", 10)();
-  clients.push(id);
+  clients[id] = {};
   res.status(201).json({ id });
 };
 
 export const getRequests = (req, res) => {
   // Check user exists
   const client = req.params.id;
-  if (!clients.includes(client))
+  if (!clients[client])
     return res.status(400).json({ error: "user not found" });
+
+  clients[client].response = res;
 
   // Create headers
   res.writeHead(200, {
@@ -24,7 +26,7 @@ export const getRequests = (req, res) => {
 
   // Prepare response
   const data = requests.filter((request) => client == request.client);
-  res.write(`data: ${JSON.stringify(data)}`);
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
 
   req.on("close", () => {
     console.log(`${client} Connection closed`);
@@ -36,7 +38,7 @@ export const getRequests = (req, res) => {
 export const saveRequest = async (req, res) => {
   // Check user exists
   const client = req.params.id;
-  if (!clients.includes(client))
+  if (!clients[client])
     return res.status(400).json({ error: "user not found" });
 
   // Push to the collection
@@ -44,6 +46,7 @@ export const saveRequest = async (req, res) => {
     client,
     createdAt: Date.now(),
     request: {
+      origin: req.headers.origin ?? "localhost",
       method: req.method,
       headers: req.headers,
       params: req.params,
@@ -51,5 +54,15 @@ export const saveRequest = async (req, res) => {
       body: req.body,
     },
   });
+
+  sendEventsToClient(
+    clients[client],
+    requests.filter((request) => request.client == client)
+  );
+
   res.status(200).json({});
+};
+
+const sendEventsToClient = (_client, _requests) => {
+  _client.response.write(`data: ${JSON.stringify(_requests)}\n\n`);
 };
