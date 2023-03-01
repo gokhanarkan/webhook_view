@@ -1,12 +1,13 @@
-import { customAlphabet } from "nanoid";
+import { customAlphabet, nanoid } from "nanoid";
 
 let clients = {};
 let requests = [];
 
 export const createId = (_, res) => {
   const id = customAlphabet("1234567890abcxyz", 10)();
-  clients[id] = { connected: false };
-  res.status(201).json({ id });
+  const connectionKey = nanoid();
+  clients[id] = { connectionKey };
+  res.status(201).json({ id, connectionKey });
 };
 
 export const getRequests = (req, res) => {
@@ -15,10 +16,13 @@ export const getRequests = (req, res) => {
   if (!clients[client])
     return res.status(400).json({ error: "user not found" });
 
-  if (clients[client].connected) return saveRequest(req, res);
+  const { connectionKey } = req.params;
+  if (!connectionKey) return saveRequest(req, res);
+
+  const clientsKey = clients[client].connectionKey;
+  if (connectionKey !== clientsKey) return saveRequest(req, res);
 
   clients[client].response = res;
-  clients[client].connected = true;
 
   // Create headers
   res.writeHead(200, {
@@ -33,7 +37,6 @@ export const getRequests = (req, res) => {
 
   req.on("close", () => {
     console.log(`${client} Connection closed`);
-    clients[client].connected = false;
   });
 };
 

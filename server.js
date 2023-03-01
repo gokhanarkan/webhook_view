@@ -5,7 +5,7 @@ import xss from "xss-clean";
 import hpp from "hpp";
 import cors from "cors";
 
-import { createId, getRequests, saveRequest } from "./events.js";
+import { createId, getRequests, saveRequest, checkUser } from "./events.js";
 
 const app = express();
 
@@ -22,9 +22,13 @@ app.use(express.static(path.join(path.resolve(), "app", "out")));
 app.get("/", (_, res) => {
   res.sendFile(path.join(path.resolve(), "app", "out", "index.html"));
 });
+app.get("/:id/:connectionKey", (_, res) => {
+  res.sendFile(path.join(path.resolve(), "app", "out", "index.html"));
+});
 app.get("/create", createId);
+app.get("/events/:id/:connectionKey", getRequests);
 app
-  .get("/:id", getRequests)
+  .get("/:id", saveRequest)
   .post("/:id", saveRequest)
   .put("/:id", saveRequest)
   .delete("/:id", saveRequest);

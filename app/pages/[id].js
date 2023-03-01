@@ -23,8 +23,14 @@ export default function Event() {
     if (!router.isReady) return;
 
     if (!listening) {
+      const connectionKey = localStorage.getItem(router.query.id);
+      if (!connectionKey)
+        return fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/${router.query.id}`
+        );
+
       const events = new EventSource(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/${router.query.id}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/events/${router.query.id}/${connectionKey}`
       );
 
       events.onmessage = (event) => {

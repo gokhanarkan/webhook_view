@@ -10,10 +10,12 @@ import {
 
 export default function Home() {
   const router = useRouter();
+
   const getId = () => {
     fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/create`)
       .then((response) => response.json())
       .then((data) => {
+        localStorage.setItem(data.id, data.connectionKey);
         router.push(data.id);
       })
       .catch((err) => alert(err));
