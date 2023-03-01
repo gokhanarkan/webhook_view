@@ -21,6 +21,9 @@ export default function Home() {
       .then((response) => response.json())
       .then((data) => {
         localStorage.setItem(data.id, data.connectionKey);
+        navigator.clipboard.writeText(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/${data.id}`
+        );
         router.push(`${data.id}/${data.connectionKey}`);
       })
       .catch((err) => alert(err));
@@ -40,8 +43,8 @@ export default function Home() {
               I needed this.
             </Text>
             <Text>
-              Simply click the button below and use the URL in the address bar
-              to see what is coming.
+              Simply click the button below, the webhook URL will be
+              automatically copied.
             </Text>
             <Text>No need to refresh!</Text>
           </Box>

@@ -67,7 +67,8 @@ export default function Event() {
             ))
           : null}
         <Text textAlign="center" mt={4}>
-          Simply, use the link on the address bar. No need to refresh.
+          No need to refresh this page. Webhook link should have been already
+          copied.
         </Text>
       </Accordion>
     </Container>
