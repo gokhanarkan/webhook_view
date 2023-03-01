@@ -5,7 +5,7 @@ import xss from "xss-clean";
 import hpp from "hpp";
 import cors from "cors";
 
-import { createId, getRequests, saveRequest, checkUser } from "./events.js";
+import { createId, getRequests, saveRequest } from "./events.js";
 
 const app = express();
 
