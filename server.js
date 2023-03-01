@@ -9,7 +9,7 @@ import { createId, getRequests, saveRequest } from "./events.js";
 
 const app = express();
 
-// Middlewares
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(xss());

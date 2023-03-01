@@ -23,11 +23,12 @@ export default function Event() {
     if (!router.isReady) return;
 
     if (!listening) {
-      const connectionKey = localStorage.getItem(router.query.id);
-      if (!connectionKey)
-        return fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/${router.query.id}`
-        );
+      const { asPath } = router;
+      const pathObjects = asPath.split("/");
+      const eventId = pathObjects[1];
+      const connectionKey = pathObjects[2];
+
+      localStorage.setItem(eventId, connectionKey);
 
       const events = new EventSource(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/events/${router.query.id}/${connectionKey}`

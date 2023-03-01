@@ -11,12 +11,17 @@ import {
 export default function Home() {
   const router = useRouter();
 
+  const { asPath } = router;
+  const pathObjects = asPath.split("/");
+  if (pathObjects && pathObjects.length === 3)
+    router.push(`${pathObjects[1]}/${pathObjects[2]}`);
+
   const getId = () => {
     fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/create`)
       .then((response) => response.json())
       .then((data) => {
         localStorage.setItem(data.id, data.connectionKey);
-        router.push(data.id);
+        router.push(`${data.id}/${data.connectionKey}`);
       })
       .catch((err) => alert(err));
   };
